@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build The Bones You'll Live With — Imara Nutrition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Arial&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFFFFF;
+    --navy: #1B2A4A;
+    --ink: #1A1A1A;
+    --rule-thin: #444;
+    --rule-thick: #1A1A1A;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: transparent;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--ink);
+    padding: 0;
+  }
+
+  .label-container {
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--cream);
+    border: 3px solid var(--navy);
+    padding: 24px 28px 32px;
+  }
+
+  /* ---- Title ---- */
+  .main-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 800;
+    font-size: clamp(20px, 4.2vw, 30px);
+    text-align: center;
+    margin: 0 0 18px;
+    line-height: 1.25;
+  }
+
+  .nf-header {
+    font-weight: 800;
+    font-size: clamp(22px, 5vw, 32px);
+    margin: 0 0 12px;
+  }
+
+  .thick-rule {
+    border: none;
+    border-top: 8px solid var(--rule-thick);
+    margin: 8px 0 14px;
+  }
+
+  .medium-rule {
+    border: none;
+    border-top: 4px solid var(--rule-thick);
+    margin: 14px 0;
+  }
+
+  .thin-rule {
+    border: none;
+    border-top: 1px solid var(--rule-thin);
+    margin: 0;
+  }
+
+  /* ---- Intro copy ---- */
+  .intro {
+    font-size: clamp(13px, 2.6vw, 14.5px);
+    line-height: 1.55;
+    margin-bottom: 4px;
+  }
+
+  .intro p { margin: 0 0 10px; }
+
+  /* ---- Daily Value column header ---- */
+  .dv-header {
+    text-align: right;
+    font-weight: 700;
+    font-size: clamp(13px, 2.8vw, 15px);
+    padding: 6px 0;
+  }
+
+  /* ---- Nutrient rows: each row is ONE flex unit, so label/desc/value
+         never separate from each other on mobile ---- */
+  .nutrient-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+  }
+
+  .nutrient-row.thin-border { border-bottom: 1px solid var(--rule-thin); }
+  .nutrient-row.thick-border { border-bottom: 4px solid var(--rule-thick); }
+
+  .nutrient-text {
+    flex: 1 1 auto;
+    min-width: 0; /* allows text to wrap properly instead of overflowing */
+  }
+
+  .nutrient-name {
+    font-weight: 700;
+    text-decoration: underline;
+    font-size: clamp(14px, 3vw, 16px);
+  }
+
+  .nutrient-desc {
+    font-size: clamp(12.5px, 2.6vw, 14px);
+    line-height: 1.5;
+  }
+
+  .nutrient-value {
+    flex: 0 0 auto;
+    font-weight: 700;
+    font-size: clamp(15px, 3.4vw, 18px);
+    white-space: nowrap;
+    padding-top: 2px;
+    text-align: right;
+  }
+
+  /* On very narrow screens, let the value drop under the text
+     but KEEP it inside the same row/card as its own nutrient —
+     never separated into a different section of the page. */
+  @media (max-width: 380px) {
+    .nutrient-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+    .nutrient-value {
+      text-align: left;
+      padding-top: 0;
+    }
+  }
+
+  /* ---- Snacks section ---- */
+  .snacks-title {
+    font-weight: 800;
+    font-size: clamp(15px, 3.2vw, 17px);
+    margin: 18px 0 8px;
+  }
+
+  .snacks-intro {
+    font-size: clamp(13px, 2.6vw, 14.5px);
+    margin-bottom: 10px;
+  }
+
+  .snacks-list {
+    margin: 0;
+    padding-left: 20px;
+    font-size: clamp(13px, 2.6vw, 14.5px);
+    line-height: 1.7;
+  }
+
+  .snacks-list li { margin-bottom: 2px; }
+
+  .footnote {
+    font-size: clamp(11px, 2.2vw, 12.5px);
+    font-style: italic;
+    color: #333;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="label-container" id="label-root"></div>
+
+<script>
+/* =========================================================
+   MONTHLY CONTENT — edit everything below to reuse this
+   template for a new topic (e.g. Iron / Blood / Heart Health).
+   The layout code above never needs to change.
+   ========================================================= */
+
+const content = {
+  mainTitle: "Build The Bones You'll Live With For The Rest Of Your Life",
+  nfHeader: "Nutrition Facts",
+
+  introParagraphs: [
+    "*You've probably heard some version of the claim that bone is stronger than steel — pound for pound, it actually is. That's not a random fun fact, though. It's a clue about what bone actually is: not a static skeleton sitting there holding you up, but living tissue, constantly being broken down and rebuilt, doing more engineering work than almost anything else in your body. And right now, during these teen years, you're doing more of that building than you ever will again — somewhere around 90% of your adult bone mass gets built by the time you're 20. So what's actually going into that construction project?",
+    "Protein forms the flexible scaffold bones are built on, and calcium and phosphorus are the minerals that harden onto that scaffold to actually give bone its strength. Vitamin D helps your body absorb the calcium in the first place, vitamin K helps direct that calcium into your bones instead of your blood vessels, and magnesium helps activate vitamin D and stabilizes the whole mineral structure. Iron plays a smaller supporting role too — it helps build collagen and keeps the cells that construct new bone properly supplied with oxygen."
+  ],
+
+  dvHeaderLabel: "Daily Value*",
+
+  nutrients: [
+    {
+      name: "Iron:",
+      desc: "The recommended daily amount (RDA) of iron for girls ages 14–18. That's higher than the 11 mg recommended for boys the same age, in part because menstruation increases iron losses.",
+      value: "15 Mg"
+    },
+    {
+      name: "Calcium:",
+      desc: "The RDA for girls age 14–18, a life stage when bone development is especially important, is higher than at other times in your life. Calcium builds the structure and density of your bones and teeth, helps your muscles contract and your heart beat, carries messages through your nervous system, helps blood clot, and helps blood move through blood vessels.",
+      value: "1,300 Mg"
+    },
+    {
+      name: "Vitamin D:",
+      desc: "The RDA for girls age 14–18 promotes the body's ability to process calcium and build stronger bones.",
+      value: "600 IU (15mcg)"
+    },
+    {
+      name: "Magnesium:",
+      desc: "The RDA for girls age 14–18 supports calcium and vitamin D in building bones, regulates muscle control, keeps the heart healthy, and strengthens your immune system.",
+      value: "360 Mg"
+    },
+    {
+      name: "Phosphorus:",
+      desc: "The RDA for girls age 14–18 works with calcium to strengthen bones, acts as the main regulator of energy metabolism in your body's organs, and contributes to your genetic materials (RNA and DNA).",
+      value: "1,250 mg"
+    },
+    {
+      name: "Vitamin K:",
+      desc: "The RDA for girls age 14–18 supports bone strengthening, helps regulate fluids and mineral balance in and out of body cells, helps maintain normal blood pressure, and helps transmit nerve signals or impulses.",
+      value: "75 mcg"
+    },
+    {
+      name: "Protein:",
+      desc: "Builds muscles, bones, enzymes, hormones, and more.",
+      value: "~46 Grams"
+    }
+  ],
+
+  snacksTitle: "*Easy Ways to Get There:",
+  snacksIntro: "Eat protein and one of these snacks every day to build stronger bones.",
+  snacks: [
+    "Yogurt + Berries + Chia",
+    "Vitamin D Fortified Milk or Soy Milk",
+    "Cheese* + Whole Grain Crackers",
+    "Salmon + Greens",
+    "Beans + Avocado + Whole Grain Tortilla"
+  ],
+  cheeseFootnote: "*Cheddar, mozzarella, swiss, or parmesan. Processed cheese products may contain calcium, but their nutrition varies by product."
+};
+
+/* =========================================================
+   RENDER — do not edit below this line
+   ========================================================= */
+
+function render(data) {
+  const root = document.getElementById('label-root');
+
+  const introHtml = data.introParagraphs.map(p => `<p>${p}</p>`).join('');
+
+  const nutrientsHtml = data.nutrients.map((n, i) => {
+    const isLast = i === data.nutrients.length - 1;
+    const borderClass = isLast ? '' : 'thin-border';
+    return `
+      <div class="nutrient-row ${borderClass}">
+        <div class="nutrient-text">
+          <span class="nutrient-name">${n.name}</span>
+          <span class="nutrient-desc">${n.desc}</span>
+        </div>
+        <div class="nutrient-value">${n.value}</div>
+      </div>
+    `;
+  }).join('');
+
+  const snacksHtml = data.snacks.map(s => `<li>${s}</li>`).join('');
+
+  root.innerHTML = `
+    <h1 class="main-title">${data.mainTitle}</h1>
+    <h2 class="nf-header">${data.nfHeader}</h2>
+    <hr class="thick-rule">
+    <div class="intro">${introHtml}</div>
+    <hr class="medium-rule">
+    <div class="dv-header">${data.dvHeaderLabel}</div>
+    ${nutrientsHtml}
+    <hr class="medium-rule">
+    <div class="snacks-title">${data.snacksTitle}</div>
+    <div class="snacks-intro">${data.snacksIntro}</div>
+    <ul class="snacks-list">${snacksHtml}</ul>
+    <div class="footnote">${data.cheeseFootnote}</div>
+  `;
+}
+
+render(content);
+</script>
+
+</body>
+</html>

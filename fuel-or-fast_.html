@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fuel or Fast? — The Group Chat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pine: #1B3B2F;
+    --pine-deep: #142E25;
+    --cream: #FAF6EE;
+    --gold: #E8A33D;
+    --gold-soft: #F2C879;
+    --ink: #1F2A24;
+    --correct: #4F8A5E;
+    --correct-bg: #E4F0E5;
+    --incorrect: #9A5A6E;
+    --incorrect-bg: #F3E5EA;
+    --muted: #6B7B72;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--pine);
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(232,163,61,0.08) 0%, transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(232,163,61,0.06) 0%, transparent 40%);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 440px;
+  }
+
+  .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 30px;
+    color: var(--cream);
+    text-align: center;
+    margin: 0 0 4px;
+  }
+
+  .sub {
+    text-align: center;
+    color: rgba(250,246,238,0.7);
+    font-size: 14px;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 0 4px;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(250,246,238,0.6);
+    letter-spacing: 0.04em;
+  }
+
+  .streak {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(250,246,238,0.15);
+    border-radius: 99px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  .card {
+    background: var(--cream);
+    border-radius: 24px;
+    padding: 40px 28px 28px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    position: relative;
+    overflow: hidden;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .leaf-deco {
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 120px;
+    height: 120px;
+    opacity: 0.08;
+  }
+
+  .food-emoji {
+    font-size: 56px;
+    text-align: center;
+    margin-bottom: 12px;
+    line-height: 1;
+  }
+
+  .food-name {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    text-align: center;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: auto;
+  }
+
+  .btn {
+    flex: 1;
+    border: 2px solid var(--ink);
+    background: transparent;
+    border-radius: 14px;
+    padding: 16px 12px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  .btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  .btn:disabled {
+    cursor: default;
+  }
+
+  .btn-fuel { border-color: var(--correct); }
+  .btn-fuel:hover:not(:disabled) { background: var(--correct-bg); }
+
+  .btn-spike { border-color: var(--incorrect); }
+  .btn-spike:hover:not(:disabled) { background: var(--incorrect-bg); }
+
+  .btn.selected-correct {
+    background: var(--correct-bg);
+    border-color: var(--correct);
+  }
+  .btn.selected-incorrect {
+    background: var(--incorrect-bg);
+    border-color: var(--incorrect);
+  }
+  .btn.reveal-correct {
+    background: var(--correct-bg);
+    border-color: var(--correct);
+  }
+
+  .feedback {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    display: none;
+  }
+
+  .feedback.show { display: block; }
+  .feedback.correct { background: var(--correct-bg); color: #2F5A3B; }
+  .feedback.incorrect { background: var(--incorrect-bg); color: #6E3648; }
+
+  .feedback strong { display: block; margin-bottom: 4px; font-family: 'Fredoka', sans-serif; }
+
+  .next-btn {
+    margin-top: 14px;
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: var(--pine);
+    color: var(--cream);
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    display: none;
+  }
+
+  .next-btn.show { display: block; }
+  .next-btn:hover { background: var(--pine-deep); }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 18px;
+    font-size: 12px;
+    color: rgba(250,246,238,0.55);
+  }
+
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-fuel { background: var(--correct); }
+  .dot-spike { background: var(--incorrect); }
+
+  /* End screen */
+  .end-screen { text-align: center; }
+  .end-emoji { font-size: 52px; margin-bottom: 8px; }
+  .kyle-img {
+    max-width: 220px;
+    width: 60%;
+    margin: 0 auto 10px;
+    display: block;
+  }
+  .kyle-caption {
+    font-size: 12.5px;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .end-title {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .end-score {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .restart-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: var(--gold);
+    color: var(--pine-deep);
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .restart-btn:hover { background: var(--gold-soft); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">The Group Chat · Mini Game</div>
+  <h1>Fuel or Fast?</h1>
+  <p class="sub">Every food does something different once it hits your body. Guess which kind of fuel you're looking at.</p>
+
+  <div class="progress-row">
+    <span class="progress-label" id="progress-label">Food 1 of 10</span>
+    <span class="streak" id="streak-label">🔥 0</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width: 10%;"></div></div>
+
+  <div class="card" id="game-card">
+    <div class="food-emoji" id="food-emoji">🥚</div>
+    <div class="food-name" id="food-name">Eggs</div>
+
+    <div class="btn-row" id="btn-row">
+      <button class="btn btn-fuel" id="btn-fuel" onclick="answer('fuel')">Real Fuel</button>
+      <button class="btn btn-spike" id="btn-spike" onclick="answer('spike')">Quick Spike</button>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next →</button>
+  </div>
+
+  <div class="legend">
+    <span><span class="dot dot-fuel"></span>Real Fuel = steady energy</span>
+    <span><span class="dot dot-spike"></span>Quick Spike = fast burst</span>
+  </div>
+</div>
+
+<script>
+const foods = [
+  { name: "Eggs", emoji: "🥚", type: "fuel", note: "Eggs are packed with protein, which takes a while to break down. That means steady energy, not a crash." },
+  { name: "Soda", emoji: "🥤", type: "spike", note: "Soda is mostly sugar with nothing to slow it down — quick burst, quick drop." },
+  { name: "Greek Yogurt", emoji: "🥣", type: "fuel", note: "High in protein, so it digests slowly and keeps you full longer." },
+  { name: "Cotton Candy", emoji: "🍬", type: "spike", note: "Basically pure sugar — spikes fast, fades fast. Totally fine as a once-in-a-while treat." },
+  { name: "Almonds", emoji: "🌰", type: "fuel", note: "Healthy fat and a little protein make nuts a slow-burning snack." },
+  { name: "White Bread", emoji: "🍞", type: "spike", note: "Refined carbs with the fiber stripped out digest fast, so hunger comes back sooner." },
+  { name: "Grilled Chicken", emoji: "🍗", type: "fuel", note: "Protein-heavy and slow to digest — solid staying power." },
+  { name: "Potato Chips", emoji: "🥔", type: "spike", note: "Mostly refined starch and fat that doesn't have much staying power. Delicious, but a quick spike." },
+  { name: "Apple + Peanut Butter", emoji: "🍎", type: "fuel", note: "Fiber from the apple plus healthy fat from the peanut butter — a genuinely great combo for lasting energy." },
+  { name: "Ice Cream Sandwich", emoji: "🍦", type: "spike", note: "Sugar-forward and fast-digesting. Not a crisis — just not built for staying power." }
+];
+
+let shuffled = [...foods].sort(() => Math.random() - 0.5);
+let current = 0;
+let score = 0;
+let streak = 0;
+let answered = false;
+
+function loadQuestion() {
+  const q = shuffled[current];
+  document.getElementById('food-emoji').textContent = q.emoji;
+  document.getElementById('food-name').textContent = q.name;
+  document.getElementById('progress-label').textContent = `Food ${current + 1} of ${shuffled.length}`;
+  document.getElementById('progress-fill').style.width = `${((current + 1) / shuffled.length) * 100}%`;
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('feedback').innerHTML = '';
+  document.getElementById('next-btn').className = 'next-btn';
+  document.getElementById('btn-fuel').className = 'btn btn-fuel';
+  document.getElementById('btn-spike').className = 'btn btn-spike';
+  document.getElementById('btn-fuel').disabled = false;
+  document.getElementById('btn-spike').disabled = false;
+  answered = false;
+}
+
+function answer(choice) {
+  if (answered) return;
+  answered = true;
+  const q = shuffled[current];
+  const correct = choice === q.type;
+
+  document.getElementById('btn-fuel').disabled = true;
+  document.getElementById('btn-spike').disabled = true;
+
+  const chosenBtn = document.getElementById(choice === 'fuel' ? 'btn-fuel' : 'btn-spike');
+  const otherBtn = document.getElementById(choice === 'fuel' ? 'btn-spike' : 'btn-fuel');
+
+  if (correct) {
+    chosenBtn.classList.add('selected-correct');
+    score++;
+    streak++;
+  } else {
+    chosenBtn.classList.add('selected-incorrect');
+    const correctBtn = document.getElementById(q.type === 'fuel' ? 'btn-fuel' : 'btn-spike');
+    correctBtn.classList.add('reveal-correct');
+    streak = 0;
+  }
+
+  document.getElementById('streak-label').textContent = `🔥 ${streak}`;
+
+  const fb = document.getElementById('feedback');
+  fb.className = `feedback show ${correct ? 'correct' : 'incorrect'}`;
+  fb.innerHTML = `<strong>${correct ? "You got it." : "Not quite."}</strong>${q.note}`;
+
+  document.getElementById('next-btn').className = 'next-btn show';
+}
+
+function nextQuestion() {
+  current++;
+  if (current < shuffled.length) {
+    loadQuestion();
+  } else {
+    showEnd();
+  }
+}
+
+function showEnd() {
+  const card = document.getElementById('game-card');
+  let msg, kyleImg, kyleCaption;
+  if (score >= 7) {
+    kyleImg = 'kyle-huzzah.png';
+    kyleCaption = '"Huzzah." — Kyle';
+    msg = score === shuffled.length ? "You clearly know how to spot staying power." : "Solid instincts — you're getting the hang of this.";
+  } else if (score === 6) {
+    kyleImg = 'kyle-revisit.png';
+    kyleCaption = '"We shall revisit this." — Kyle';
+    msg = "So close! A little more practice and you've got it.";
+  } else {
+    kyleImg = 'kyle-ohdear.png';
+    kyleCaption = '"Oh, dear." — Kyle';
+    msg = "Fuel vs. spike takes practice. Give it another go!";
+  }
+
+  card.innerHTML = `
+    <div class="end-screen">
+      <img class="kyle-img" src="${kyleImg}" alt="Kyle the tortoise reacting to your score">
+      <div class="kyle-caption">${kyleCaption}</div>
+      <div class="end-title">${score} / ${shuffled.length}</div>
+      <div class="end-score">${msg}<br>Remember: there's no "bad" food here — just fast fuel and slow fuel, and your body needs both sometimes.</div>
+      <button class="restart-btn" onclick="restart()">Play Again</button>
+    </div>
+  `;
+}
+
+function restart() {
+  shuffled = [...foods].sort(() => Math.random() - 0.5);
+  current = 0;
+  score = 0;
+  streak = 0;
+  document.getElementById('streak-label').textContent = `🔥 0`;
+  location.reload();
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

@@ -245,6 +245,18 @@
   /* End screen */
   .end-screen { text-align: center; }
   .end-emoji { font-size: 52px; margin-bottom: 8px; }
+  .kyle-img {
+    max-width: 220px;
+    width: 60%;
+    margin: 0 auto 10px;
+    display: block;
+  }
+  .kyle-caption {
+    font-size: 12.5px;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
   .end-title {
     font-family: 'Fredoka', sans-serif;
     font-size: 24px;
@@ -387,18 +399,25 @@ function nextQuestion() {
 
 function showEnd() {
   const card = document.getElementById('game-card');
-  let msg, emoji;
-  if (score === shuffled.length) {
-    emoji = "🌟"; msg = "You clearly know how to spot staying power.";
-  } else if (score >= shuffled.length * 0.7) {
-    emoji = "🍃"; msg = "Solid instincts — you're getting the hang of this.";
+  let msg, kyleImg, kyleCaption;
+  if (score >= 7) {
+    kyleImg = 'kyle-huzzah.png';
+    kyleCaption = '"Huzzah." — Kyle';
+    msg = score === shuffled.length ? "You clearly know how to spot staying power." : "Solid instincts — you're getting the hang of this.";
+  } else if (score === 6) {
+    kyleImg = 'kyle-revisit.png';
+    kyleCaption = '"We shall revisit this." — Kyle';
+    msg = "So close! A little more practice and you've got it.";
   } else {
-    emoji = "🌱"; msg = "Fuel vs. spike takes practice. Give it another go!";
+    kyleImg = 'kyle-ohdear.png';
+    kyleCaption = '"Oh, dear." — Kyle';
+    msg = "Fuel vs. spike takes practice. Give it another go!";
   }
 
   card.innerHTML = `
     <div class="end-screen">
-      <div class="end-emoji">${emoji}</div>
+      <img class="kyle-img" src="${kyleImg}" alt="Kyle the tortoise reacting to your score">
+      <div class="kyle-caption">${kyleCaption}</div>
       <div class="end-title">${score} / ${shuffled.length}</div>
       <div class="end-score">${msg}<br>Remember: there's no "bad" food here — just fast fuel and slow fuel, and your body needs both sometimes.</div>
       <button class="restart-btn" onclick="restart()">Play Again</button>

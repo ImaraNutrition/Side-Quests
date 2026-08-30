@@ -213,6 +213,18 @@
 
   .end-screen { text-align: center; }
   .end-emoji { font-size: 52px; margin-bottom: 8px; }
+  .kyle-img {
+    max-width: 220px;
+    width: 60%;
+    margin: 0 auto 10px;
+    display: block;
+  }
+  .kyle-caption {
+    font-size: 12.5px;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
   .end-title { font-family: 'Fredoka', sans-serif; font-size: 24px; font-weight: 600; margin-bottom: 8px; }
   .end-score { font-size: 15px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
   .restart-btn {
@@ -343,18 +355,25 @@ function nextQuestion() {
 
 function showEnd() {
   const card = document.getElementById('game-card');
-  let msg, emoji;
-  if (score === shuffled.length) {
-    emoji = "🔍"; msg = "You've got a solid nose for spotting nonsense. Keep that instinct — you'll need it.";
-  } else if (score >= shuffled.length * 0.7) {
-    emoji = "🍃"; msg = "Pretty sharp. A little healthy skepticism goes a long way online.";
+  let msg, kyleImg, kyleCaption;
+  if (score >= 7) {
+    kyleImg = 'kyle-huzzah.png';
+    kyleCaption = '"Huzzah." — Kyle';
+    msg = score === shuffled.length ? "You've got a solid nose for spotting nonsense. Keep that instinct — you'll need it." : "Pretty sharp. A little healthy skepticism goes a long way online.";
+  } else if (score === 6) {
+    kyleImg = 'kyle-revisit.png';
+    kyleCaption = '"We shall revisit this." — Kyle';
+    msg = "So close! A little more practice spotting the fakes and you've got it.";
   } else {
-    emoji = "🌱"; msg = "This stuff is genuinely tricky — even smart people get fooled by confident-sounding claims. That's exactly why it's worth practicing.";
+    kyleImg = 'kyle-ohdear.png';
+    kyleCaption = '"Oh, dear." — Kyle';
+    msg = "This stuff is genuinely tricky — even smart people get fooled by confident-sounding claims. That's exactly why it's worth practicing.";
   }
 
   card.innerHTML = `
     <div class="end-screen">
-      <div class="end-emoji">${emoji}</div>
+      <img class="kyle-img" src="${kyleImg}" alt="Kyle the tortoise reacting to your score">
+      <div class="kyle-caption">${kyleCaption}</div>
       <div class="end-title">${score} / ${shuffled.length}</div>
       <div class="end-score">${msg}</div>
       <button class="restart-btn" onclick="restart()">Play Again</button>

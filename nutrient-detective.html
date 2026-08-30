@@ -249,6 +249,18 @@
 
   .end-screen { text-align: center; }
   .end-emoji { font-size: 52px; margin-bottom: 8px; }
+  .kyle-img {
+    max-width: 220px;
+    width: 60%;
+    margin: 0 auto 10px;
+    display: block;
+  }
+  .kyle-caption {
+    font-size: 12.5px;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
   .end-title { font-family: 'Fredoka', sans-serif; font-size: 24px; font-weight: 600; margin-bottom: 8px; }
   .end-score { font-size: 15px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
   .restart-btn {
@@ -432,18 +444,25 @@ function nextCase() {
 
 function showEnd() {
   const card = document.getElementById('game-card');
-  let msg, emoji;
-  if (solved === shuffled.length) {
-    emoji = "🕵️"; msg = "Perfect record. You're genuinely good at reading what your body's telling you.";
-  } else if (solved >= shuffled.length * 0.6) {
-    emoji = "🍃"; msg = "Solid detective work. These clues are subtle in real life too — worth trusting your gut when something feels off.";
+  let msg, kyleImg, kyleCaption;
+  if (solved >= 6) {
+    kyleImg = 'kyle-huzzah.png';
+    kyleCaption = '"Huzzah." — Kyle';
+    msg = solved === shuffled.length ? "Perfect record. You're genuinely good at reading what your body's telling you." : "Solid detective work. These clues are subtle in real life too — worth trusting your gut when something feels off.";
+  } else if (solved === 5) {
+    kyleImg = 'kyle-revisit.png';
+    kyleCaption = '"We shall revisit this." — Kyle';
+    msg = "So close! A few more clues to crack and you've got it.";
   } else {
-    emoji = "🌱"; msg = "These cases are tricky on purpose — a lot of nutrient gaps hide behind vague symptoms. Give it another run.";
+    kyleImg = 'kyle-ohdear.png';
+    kyleCaption = '"Oh, dear." — Kyle';
+    msg = "These cases are tricky on purpose — a lot of nutrient gaps hide behind vague symptoms. Give it another run.";
   }
 
   card.innerHTML = `
     <div class="end-screen">
-      <div class="end-emoji">${emoji}</div>
+      <img class="kyle-img" src="${kyleImg}" alt="Kyle the tortoise reacting to your score">
+      <div class="kyle-caption">${kyleCaption}</div>
       <div class="end-title">${solved} / ${shuffled.length} Cases Solved</div>
       <div class="end-score">${msg}</div>
       <button class="restart-btn" onclick="restart()">New Cases</button>
